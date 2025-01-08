@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>calculator</title>
+    <style>
+        .error-text {
+            color: red;
+        }
+        .success-text {
+            color: green;
+        }
+    </style>
 </head>
 <body>
     <input type="number" id="num1">
@@ -17,6 +25,7 @@
         const operatorInput = document.getElementById('operator');
         const num2Input = document.getElementById('num2');
         const btn = document.getElementById('btn');
+        const output = document.getElementById('output');
 
         btn.addEventListener('click', handleClick);
 
@@ -30,12 +39,22 @@
 
             let result;
             if (errors.length > 0) {
-                result = errors.join('<br>');
-            } else {
-                result = calculate(num1Value, num2Value, operatorValue);
-            }
+                output.classList.remove("success-text");
+                output.classList.add("error-text");
 
-            output.innerHTML = result;
+                let errorHTML = `<h3>Kļūdas: </h3><ul>`;
+                for (let error of errors) {
+                    errorHTML += `<li>${error}</li>`;
+                }
+                errorHTML += `</ul>`;
+                output.innerHTML = errorHTML;
+            } else {
+                output.classList.remove("error-text");
+                output.classList.add("success-text");
+
+                const result = calculate(num1Value, num2Value, operatorValue);
+                output.innerHTML = `<h3>Rezultāts: </h3><p>${result}</p>`;
+            }
         }
 
         function validateUserInput(n1, n2, op) {
@@ -65,7 +84,7 @@
                     result = n1 * n2;
                     break;
                 case '/':
-                    result = n2 !== 0 ? n1 / n2 : 'Dalināšana ar nulli nav atļauta';
+                    result = n1 / n2;
                     break;
                 default:
                     result = 'Nepareizs operators';
