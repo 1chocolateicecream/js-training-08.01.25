@@ -16,35 +16,62 @@
         const num1Input = document.getElementById('num1');
         const operatorInput = document.getElementById('operator');
         const num2Input = document.getElementById('num2');
-
         const btn = document.getElementById('btn');
 
-        btn.addEventListener('click', handleClick)
+        btn.addEventListener('click', handleClick);
 
-        function handleClick(){
-            let num1Value = parseFloat(num1Input.value)
-            let operatorValue = parseFloat(operatorInput.value)
-            let num2Value = operatorInput.value
+        function handleClick() {
+            const num1Value = parseFloat(num1Input.value);
+            const operatorValue = operatorInput.value;
+            const num2Value = parseFloat(num2Input.value);
+            const output = document.getElementById('output');
+
+            let errors = validateUserInput(num1Value, num2Value, operatorValue);
 
             let result;
-            switch (operatorValue) {
+            if (errors.length > 0) {
+                result = errors.join('<br>');
+            } else {
+                result = calculate(num1Value, num2Value, operatorValue);
+            }
+
+            output.innerHTML = result;
+        }
+
+        function validateUserInput(n1, n2, op) {
+            let ary = [];
+            if (isNaN(n1)) {
+                ary.push('Pirmais skaitlis nav pareizs');
+            }
+            if (isNaN(n2)) {
+                ary.push('Otrais skaitlis nav pareizs');
+            }
+            if (!['+', '-', '*', '/'].includes(op)) {
+                ary.push('Nepareizs operators');
+            }
+            return ary;
+        }
+
+        function calculate(n1, n2, op) {
+            let result;
+            switch (op) {
                 case '+':
-                    result = num1Value + num2Value;
+                    result = n1 + n2;
                     break;
                 case '-':
-                    result = num1Value - num2Value;
+                    result = n1 - n2;
                     break;
                 case '*':
-                    result = num1Value * num2Value;
+                    result = n1 * n2;
                     break;
                 case '/':
-                    result = num2Value
+                    result = n2 !== 0 ? n1 / n2 : 'Dalināšana ar nulli nav atļauta';
                     break;
                 default:
-                    result = 'nepareizs operators';
+                    result = 'Nepareizs operators';
                     break;
             }
-            output.textContent = `Result: ${result}`;
+            return result;
         }
     </script>
 </body>
