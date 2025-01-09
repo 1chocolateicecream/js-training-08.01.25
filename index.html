@@ -27,9 +27,11 @@
         const btn = document.getElementById('btn');
         const output = document.getElementById('output');
 
+        const allowedOperators = ['+','-','*','/'];
+
         btn.addEventListener('click', handleClick);
 
-        function handleClick() {
+        /*function handleClick() {
             const num1Value = parseFloat(num1Input.value);
             const operatorValue = operatorInput.value;
             const num2Value = parseFloat(num2Input.value);
@@ -55,9 +57,23 @@
                 const result = calculate(num1Value, num2Value, operatorValue);
                 output.innerHTML = `<h3>Rezultāts: </h3><p>${result}</p>`;
             }
+        }*/
+            function handleClick() {
+        let num1Value = parseFloat(num1Input.value);
+        let num2Value = parseFloat(num2Input.value);
+        let operatorValue = operatorInput.value;
+        let result;
+        let errors = validateUserInput(num1Value, num2Value, operatorValue);
+        if (errors.length > 0) {
+            result = formatErrorInHTML();
+            //            result = errors.join("<br>");
+        } else {
+            result = calculate(num1Value, num2Value, operatorValue);
+        }
+        output.innerHTML = result;
         }
 
-        function validateUserInput(n1, n2, op) {
+        /*function validateUserInput(n1, n2, op) {
             let ary = [];
             if (isNaN(n1)) {
                 ary.push('Pirmais skaitlis nav pareizs');
@@ -69,6 +85,13 @@
                 ary.push('Nepareizs operators');
             }
             return ary;
+        }*/
+        function validateUserInput(n1, n2, op) {
+        let ary = [];
+        if (isNaN(n1)) ary.push("Pirmais skaitlis nav pareizs");
+        if (isNaN(n2)) ary.push("Otrais skaitlis nav pareizs");
+        if(allowedOperators.includes(op)) ary.push("nederigs operators")
+        return ary;
         }
 
         function calculate(n1, n2, op) {
@@ -91,6 +114,13 @@
                     break;
             }
             return result;
+        }
+        function formatErrorInHTML(inputErrors){
+            let htmlErrorsAsString = '';
+            for (let i = 0; i < errorsAry.length; i++){
+                htmlErrorsAsString = `<li>${errorsAry[i]}</li>`;
+            }
+            return `<ul>${htmlErrorsAsString}</ul>`;
         }
     </script>
 </body>
