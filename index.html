@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>calculator</title>
+    <title>Calculator</title>
     <style>
         .error-text {
             color: red;
@@ -18,7 +18,7 @@
     <input type="text" id="operator">
     <input type="number" id="num2"><br>
     <button id="btn">rekinat</button>
-    <p id="output"></p>
+    <p id="output" class="success"></p>
 
     <script>
         const num1Input = document.getElementById('num1');
@@ -27,71 +27,35 @@
         const btn = document.getElementById('btn');
         const output = document.getElementById('output');
 
-        const allowedOperators = ['+','-','*','/'];
+        const allowedOperators = ['+', '-', '*', '/'];
 
         btn.addEventListener('click', handleClick);
 
-        /*function handleClick() {
+        function handleClick() {
             const num1Value = parseFloat(num1Input.value);
-            const operatorValue = operatorInput.value;
             const num2Value = parseFloat(num2Input.value);
-            const output = document.getElementById('output');
+            const operatorValue = operatorInput.value;
 
-            let errors = validateUserInput(num1Value, num2Value, operatorValue);
+            output.classList.remove('success-text', 'error-text');
 
-            let result;
+            const errors = validateUserInput(num1Value, num2Value, operatorValue);
+
             if (errors.length > 0) {
-                output.classList.remove("success-text");
-                output.classList.add("error-text");
-
-                let errorHTML = `<h3>Kļūdas: </h3><ul>`;
-                for (let error of errors) {
-                    errorHTML += `<li>${error}</li>`;
-                }
-                errorHTML += `</ul>`;
-                output.innerHTML = errorHTML;
+                output.classList.add('error-text');
+                output.innerHTML = formatErrorInHTML(errors);
             } else {
-                output.classList.remove("error-text");
-                output.classList.add("success-text");
-
+                output.classList.add('success-text');
                 const result = calculate(num1Value, num2Value, operatorValue);
                 output.innerHTML = `<h3>Rezultāts: </h3><p>${result}</p>`;
             }
-        }*/
-            function handleClick() {
-        let num1Value = parseFloat(num1Input.value);
-        let num2Value = parseFloat(num2Input.value);
-        let operatorValue = operatorInput.value;
-        let result;
-        let errors = validateUserInput(num1Value, num2Value, operatorValue);
-        if (errors.length > 0) {
-            result = formatErrorInHTML();
-            //            result = errors.join("<br>");
-        } else {
-            result = calculate(num1Value, num2Value, operatorValue);
-        }
-        output.innerHTML = result;
         }
 
-        /*function validateUserInput(n1, n2, op) {
-            let ary = [];
-            if (isNaN(n1)) {
-                ary.push('Pirmais skaitlis nav pareizs');
-            }
-            if (isNaN(n2)) {
-                ary.push('Otrais skaitlis nav pareizs');
-            }
-            if (!['+', '-', '*', '/'].includes(op)) {
-                ary.push('Nepareizs operators');
-            }
-            return ary;
-        }*/
         function validateUserInput(n1, n2, op) {
-        let ary = [];
-        if (isNaN(n1)) ary.push("Pirmais skaitlis nav pareizs");
-        if (isNaN(n2)) ary.push("Otrais skaitlis nav pareizs");
-        if(allowedOperators.includes(op)) ary.push("nederigs operators")
-        return ary;
+            const ary = [];
+            if (isNaN(n1) || n1 === '') ary.push('Pirmais skaitlis nav pareizs');
+            if (isNaN(n2) || n2 === '') ary.push('Otrais skaitlis nav pareizs');
+            if (!allowedOperators.includes(op)) ary.push('Nepareizs operators');
+            return ary;
         }
 
         function calculate(n1, n2, op) {
@@ -107,7 +71,7 @@
                     result = n1 * n2;
                     break;
                 case '/':
-                    result = n1 / n2;
+                    result = n2 !== 0 ? n1 / n2 : 'Dalīt ar nulli nedrīkst!';
                     break;
                 default:
                     result = 'Nepareizs operators';
@@ -115,12 +79,13 @@
             }
             return result;
         }
-        function formatErrorInHTML(inputErrors){
+
+        function formatErrorInHTML(inputErrors) {
             let htmlErrorsAsString = '';
-            for (let i = 0; i < errorsAry.length; i++){
-                htmlErrorsAsString = `<li>${errorsAry[i]}</li>`;
+            for (let i = 0; i < inputErrors.length; i++) {
+                htmlErrorsAsString += `<li>${inputErrors[i]}</li>`;
             }
-            return `<ul>${htmlErrorsAsString}</ul>`;
+            return `<h3>Kļūdas:</h3><ul>${htmlErrorsAsString}</ul>`;
         }
     </script>
 </body>
